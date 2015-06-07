@@ -31,6 +31,6 @@ public class Instrument1 extends AbstractInstrument {
         if(counter.get() == 0){
             return ZERO_VALUE;
         }
-        return Math.round(total / counter.get());
+        return total / counter.get();
     }
 }

@@ -50,6 +50,6 @@ public class OtherInstrument extends AbstractInstrument {
         if(counter == 0){
             return ZERO_VALUE;
         }
-        return Math.round(total / counter);
+        return total / counter;
     }
 }
