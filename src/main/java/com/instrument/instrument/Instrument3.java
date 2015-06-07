@@ -1,7 +1,5 @@
 package com.instrument.instrument;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -10,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Instrument3 extends AbstractInstrument {
 
-    private volatile BigDecimal total = new BigDecimal(0);
+    private volatile double total = 0;
     private AtomicLong counter = new AtomicLong(0);
 
 
@@ -27,16 +25,16 @@ public class Instrument3 extends AbstractInstrument {
     }
 
     @Override
-    protected void addData(LocalDate date, BigDecimal value) {
-        total = total.add(value);
+    protected void addData(LocalDate date, double value) {
+        total += value;
         counter.incrementAndGet();
     }
 
     @Override
-    public BigDecimal calculateMean() {
+    public double calculateMean() {
         if(counter.get() == 0){
             return ZERO_VALUE;
         }
-        return total.divide(new BigDecimal(counter.get()), RoundingMode.HALF_UP) ;
+        return Math.round(total / counter.get());
     }
 }

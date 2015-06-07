@@ -8,7 +8,6 @@ import org.junit.Rule;
 import org.junit.rules.TestName;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +50,9 @@ public class AnalysisTest
         Map<String, AbstractInstrument> instruments = runAnalysis(lines);
 
         assertTrue(instruments.size() == 4);
-        BigDecimal testValue = new BigDecimal(1);
+        double testValue = 1;
         for(AbstractInstrument instrument : instruments.values()){
-            assertTrue(instrument.calculateMean().equals(testValue));
+            assertTrue(instrument.calculateMean() == testValue);
         }
     }
 
@@ -68,9 +67,9 @@ public class AnalysisTest
         Map<String, AbstractInstrument> instruments = runAnalysis(lines);
 
         assertTrue(instruments.size() == 4);
-        BigDecimal testValue = new BigDecimal(0);
+        double testValue = 0;
         for(AbstractInstrument instrument : instruments.values()){
-            assertTrue(instrument.calculateMean().equals(testValue));
+            assertTrue(instrument.calculateMean() == testValue);
         }
     }
 

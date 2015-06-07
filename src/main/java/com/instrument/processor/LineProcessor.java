@@ -4,7 +4,6 @@ import com.instrument.helper.Constants;
 import com.instrument.instrument.AbstractInstrument;
 import com.instrument.instrument.InstrumentFactory;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -37,7 +36,7 @@ public class LineProcessor implements Runnable {
                 if(tokens.length == 3){
                     String name = tokens[0];
                     LocalDate date = LocalDate.parse(tokens[1], formatter);
-                    BigDecimal value = new BigDecimal(tokens[2]);
+                    Double value = Double.parseDouble(tokens[2]);
                     AbstractInstrument instrument = instrumentFactory.getInstrument(name);
                     instrument.filterAndAddData(date, value);
                 }

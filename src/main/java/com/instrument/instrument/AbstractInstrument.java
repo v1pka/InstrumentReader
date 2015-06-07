@@ -1,6 +1,5 @@
 package com.instrument.instrument;
 
-import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.concurrent.locks.ReentrantLock;
@@ -12,7 +11,7 @@ public abstract class AbstractInstrument {
 
     private String name;
     private final ReentrantLock lock = new ReentrantLock();
-    protected final static BigDecimal ZERO_VALUE = new BigDecimal(0);
+    protected final static double ZERO_VALUE = 0;
 
     public AbstractInstrument(String name) {
         this.name = name;
@@ -39,8 +38,7 @@ public abstract class AbstractInstrument {
     }
 
 
-
-    public void filterAndAddData(LocalDate date, BigDecimal value){
+    public void filterAndAddData(LocalDate date, double value) {
         if(!isWorkingDay(date) || !validDate(date)){
             return;
         }
@@ -67,8 +65,9 @@ public abstract class AbstractInstrument {
 
     protected abstract boolean validDate(LocalDate date);
 
-    protected abstract void addData(LocalDate date, BigDecimal value);
-    public abstract BigDecimal calculateMean();
+    protected abstract void addData(LocalDate date, double value);
+
+    public abstract double calculateMean();
 
     @Override
     public String toString() {
