@@ -2,15 +2,14 @@ package com.instrument.instrument;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by ipopkov on 06/06/15.
  */
 public class Instrument2 extends AbstractInstrument {
 
-    private volatile double total = 0;
-    private AtomicLong counter = new AtomicLong(0);
+    private double total = 0;
+    private Long counter = 0L;
 
     public Instrument2(String name) {
         super(name);
@@ -27,14 +26,14 @@ public class Instrument2 extends AbstractInstrument {
     @Override
     protected void addData(LocalDate date, double value) {
         total += value;
-        counter.getAndIncrement();
+        counter++;
     }
 
     @Override
     public double calculateMean() {
-        if(counter.get() == 0){
+        if (counter == 0) {
             return ZERO_VALUE;
         }
-        return total / counter.get();
+        return total / counter;
     }
 }

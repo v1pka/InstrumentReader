@@ -2,29 +2,25 @@ package com.instrument.instrument;
 
 import com.instrument.helper.Constants;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by ipopkov on 06/06/15.
  */
 public class InstrumentFactory {
 
-    private static class FactoryHolder {
-        public static final InstrumentFactory instance = new InstrumentFactory();
-    }
-
     private InstrumentFactory(){}
 
-    public static InstrumentFactory getInstance() {
-        return FactoryHolder.instance;
+    public static InstrumentFactory createInstance() {
+        return new InstrumentFactory();
     }
 
     public Map<String, AbstractInstrument> getUsedInstruments() {
         return instruments;
     }
 
-    private Map<String, AbstractInstrument> instruments = new ConcurrentHashMap<>();
+    private Map<String, AbstractInstrument> instruments = new HashMap<>();
 
     public AbstractInstrument getInstrument(String name){
         if(instruments.containsKey(name)){
@@ -46,10 +42,7 @@ public class InstrumentFactory {
         } else {
             abstractInstrument = new OtherInstrument(name);
         }
-        AbstractInstrument oldInstr = instruments.putIfAbsent(name, abstractInstrument);
-        if(oldInstr != null){
-            abstractInstrument = oldInstr;
-        }
+        instruments.put(name, abstractInstrument);
         return abstractInstrument;
     }
 

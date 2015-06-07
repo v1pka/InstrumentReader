@@ -3,12 +3,12 @@ package com.instrument.analysis;
 import com.instrument.files.LargeFileReader;
 import com.instrument.helper.Constants;
 import com.instrument.instrument.AbstractInstrument;
+import com.instrument.instrument.AggregationInstrument;
 import com.instrument.instrument.InstrumentFactory;
 import com.instrument.processor.LineProcessor;
 
 import java.io.File;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,37 +23,41 @@ public class InstrumentAnalysis {
 
     public InstrumentAnalysis(String path) {
         this.source = new File(path);
-        if(!source.exists()){
+        if (!source.exists()) {
             throw new RuntimeException("File not found!");
         }
     }
 
-    public Map<String, AbstractInstrument> process(){
+    public Map<String, AbstractInstrument> process() {
         BlockingQueue<String> linesToProcess = new LinkedBlockingQueue<String>();
 
         LargeFileReader fileReader = new LargeFileReader(source, linesToProcess);
 
+        //All cpus should work :)
         int cpuNumber = Runtime.getRuntime().availableProcessors();
         ThreadPoolExecutor es = (ThreadPoolExecutor) Executors.newFixedThreadPool(cpuNumber);
 
+        List<InstrumentFactory> usedFactories = new LinkedList<>();
         for (int i = 0; i < cpuNumber - 1; i++) {
-            es.execute(new LineProcessor(linesToProcess));
+            InstrumentFactory factory = InstrumentFactory.createInstance();
+            usedFactories.add(factory);
+            es.execute(new LineProcessor(linesToProcess, factory));
         }
 
         es.execute(fileReader);
 
-        for(;;){
-            if(fileReader.isCompleted && linesToProcess.isEmpty() ) {
+        //Waiting for completion
+        for (; ; ) {
+            if (fileReader.isCompleted && linesToProcess.isEmpty()) {
                 killThreadsByPoisonPill(es, linesToProcess);
-                Map<String, AbstractInstrument> notSortedInstruments =  InstrumentFactory.getInstance().getUsedInstruments();
-                Map<String, AbstractInstrument> sortedInstruments = new TreeMap<>(notSortedInstruments);
+                Map<String, AbstractInstrument> sortedInstruments = aggregateFactories(usedFactories);
                 printResult(sortedInstruments);
                 es.shutdown();
                 return sortedInstruments;
             }
             synchronized (this) {
                 try {
-                    wait(100);
+                    wait(10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -61,15 +65,38 @@ public class InstrumentAnalysis {
         }
     }
 
+    private Map<String, AbstractInstrument> aggregateFactories(List<InstrumentFactory> usedFactories) {
+        Map<String, AbstractInstrument> notSortedInstruments = new HashMap<>();
+        usedFactories.forEach(factory -> {
+                    factory.getUsedInstruments().forEach((name, currentInstrument) -> {
+                                AbstractInstrument existingInstrument = notSortedInstruments.get(name);
+                                if (existingInstrument == null) {
+                                    existingInstrument = currentInstrument;
+                                } else {
+                                    AggregationInstrument aggregationInstrument = new AggregationInstrument(name);
+                                    double current = currentInstrument.calculateMean();
+                                    double previous = existingInstrument.calculateMean();
+                                    aggregationInstrument.addDataWithoutValidation(current);
+                                    aggregationInstrument.addDataWithoutValidation(previous);
+                                    existingInstrument = aggregationInstrument;
+                                }
+                                notSortedInstruments.put(name, existingInstrument);
+                            }
+                    );
+                }
+        );
+        return new TreeMap<>(notSortedInstruments);
+    }
+
     private void printResult(Map<String, AbstractInstrument> sortedInstruments) {
         System.out.println("Result: ");
-        for(AbstractInstrument instrument : sortedInstruments.values()){
+        for (AbstractInstrument instrument : sortedInstruments.values()) {
             System.out.println(instrument.getName() + " mean: " + instrument.calculateMean());
         }
     }
 
     private void killThreadsByPoisonPill(ThreadPoolExecutor es, BlockingQueue<String> fileContent) {
-        while (es.getActiveCount() != 0){
+        while (es.getActiveCount() != 0) {
             try {
                 fileContent.put(Constants.POISON_PILL);
             } catch (InterruptedException e) {

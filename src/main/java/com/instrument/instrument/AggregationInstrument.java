@@ -3,28 +3,28 @@ package com.instrument.instrument;
 import java.time.LocalDate;
 
 /**
- * Created by ipopkov on 06/06/15.
+ * Created by ipopkov on 07/06/15.
  */
-public class Instrument3 extends AbstractInstrument {
+public class AggregationInstrument extends AbstractInstrument {
 
     private double total = 0;
-    private Long counter = 0L;
+    private long counter = 0L;
 
-
-    public Instrument3(String name) {
+    public AggregationInstrument(String name) {
         super(name);
     }
 
     @Override
     protected boolean validDate(LocalDate date) {
-        if(date.getYear() == 2014){
-            return true;
-        }
         return false;
     }
 
     @Override
     protected void addData(LocalDate date, double value) {
+
+    }
+
+    public void addDataWithoutValidation(double value) {
         total += value;
         counter++;
     }

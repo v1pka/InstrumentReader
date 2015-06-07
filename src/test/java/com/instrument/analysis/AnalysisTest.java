@@ -1,7 +1,6 @@
 package com.instrument.analysis;
 
 import com.instrument.instrument.AbstractInstrument;
-import com.instrument.instrument.InstrumentFactory;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -28,14 +27,15 @@ public class AnalysisTest
 
     @Before
     public void setUp() throws IOException {
-        InstrumentFactory.getInstance().getUsedInstruments().clear();
         if(testName.getMethodName().equals("testHugeFileOutOfMemory")){
             System.out.println("Starting to generate file.");
             File tempHugeFile = File.createTempFile("hugeInput", "txt");
+            System.out.println("Path: " + tempHugeFile.getAbsolutePath());
             Long size = 1024L * 1024L * 1024L;
             File hugeFile = RandomFileGenerator.generateHugeTestFile(tempHugeFile, size);
             pathToHugeFile = hugeFile.getAbsolutePath();
             System.out.println("Finished.");
+            hugeFile.deleteOnExit();
         }
     }
 
@@ -87,11 +87,11 @@ public class AnalysisTest
     @org.junit.Test
     public void testHugeFileOutOfMemory() {
         //It is long running test - so it is here just for personal purposes :)
+        System.out.println("Starting test.");
         File hugeFile = new File(pathToHugeFile);
         Long start = System.currentTimeMillis();
         Map<String, AbstractInstrument> instruments = runAnalysis(hugeFile);
         assertTrue(!instruments.isEmpty());
-        hugeFile.deleteOnExit();
         Long end = System.currentTimeMillis();
         System.out.println("Execution time of processing large file -  " + TimeUnit.MILLISECONDS.toSeconds(end - start));
     }

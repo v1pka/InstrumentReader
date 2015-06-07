@@ -2,7 +2,6 @@ package com.instrument.instrument;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by ipopkov on 06/06/15.
@@ -10,7 +9,6 @@ import java.util.concurrent.locks.ReentrantLock;
 public abstract class AbstractInstrument {
 
     private String name;
-    private final ReentrantLock lock = new ReentrantLock();
     protected final static double ZERO_VALUE = 0;
 
     public AbstractInstrument(String name) {
@@ -42,17 +40,7 @@ public abstract class AbstractInstrument {
         if(!isWorkingDay(date) || !validDate(date)){
             return;
         }
-        //Busy wait
-        for (;;) {
-            if(lock.tryLock()) {
-                try {
-                    addData(date, value);
-                    return;
-                } finally {
-                    lock.unlock();
-                }
-            }
-        }
+        addData(date, value);
     }
 
     private boolean isWorkingDay(LocalDate date) {

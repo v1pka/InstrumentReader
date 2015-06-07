@@ -19,9 +19,9 @@ public class LineProcessor implements Runnable {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ENGLISH);
 
 
-    public LineProcessor(BlockingQueue<String> linesToProcess) {
+    public LineProcessor(BlockingQueue<String> linesToProcess, InstrumentFactory factory) {
         this.linesToProcess = linesToProcess;
-        instrumentFactory = InstrumentFactory.getInstance();
+        this.instrumentFactory = factory;
     }
 
     @Override
