@@ -42,14 +42,21 @@ public class OtherInstrument extends AbstractInstrument {
 
     @Override
     public double calculateMean() {
+        return getTotal() / getCount();
+    }
+
+
+    @Override
+    public double getTotal() {
         Double total = new Double(0);
         for (Double value : tenLastDates.values()) {
             total += value;
         }
-        long counter = tenLastDates.size();
-        if(counter == 0){
-            return ZERO_VALUE;
-        }
-        return total / counter;
+        return total;
+    }
+
+    @Override
+    public long getCount() {
+        return tenLastDates.size();
     }
 }

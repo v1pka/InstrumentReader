@@ -70,17 +70,15 @@ public class InstrumentAnalysis {
         usedFactories.forEach(factory -> {
                     factory.getUsedInstruments().forEach((name, currentInstrument) -> {
                                 AbstractInstrument existingInstrument = notSortedInstruments.get(name);
+                                AggregationInstrument aggregationInstrument;
                                 if (existingInstrument == null) {
-                                    existingInstrument = currentInstrument;
+                                    aggregationInstrument = new AggregationInstrument(name);
                                 } else {
-                                    AggregationInstrument aggregationInstrument = new AggregationInstrument(name);
-                                    double current = currentInstrument.calculateMean();
-                                    double previous = existingInstrument.calculateMean();
-                                    aggregationInstrument.addDataWithoutValidation(current);
-                                    aggregationInstrument.addDataWithoutValidation(previous);
-                                    existingInstrument = aggregationInstrument;
+                                    aggregationInstrument = (AggregationInstrument) existingInstrument;
                                 }
-                                notSortedInstruments.put(name, existingInstrument);
+                                aggregationInstrument.addDataWithoutValidation(currentInstrument.getTotal(),
+                                        currentInstrument.getCount());
+                                notSortedInstruments.put(name, aggregationInstrument);
                             }
                     );
                 }

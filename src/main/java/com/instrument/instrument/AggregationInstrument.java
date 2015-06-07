@@ -3,6 +3,7 @@ package com.instrument.instrument;
 import java.time.LocalDate;
 
 /**
+ * Just for aggregation purposes
  * Created by ipopkov on 07/06/15.
  */
 public class AggregationInstrument extends AbstractInstrument {
@@ -24,9 +25,9 @@ public class AggregationInstrument extends AbstractInstrument {
 
     }
 
-    public void addDataWithoutValidation(double value) {
+    public void addDataWithoutValidation(double value, long count) {
         total += value;
-        counter++;
+        counter += count;
     }
 
     @Override
@@ -35,5 +36,15 @@ public class AggregationInstrument extends AbstractInstrument {
             return ZERO_VALUE;
         }
         return total / counter;
+    }
+
+    @Override
+    public double getTotal() {
+        return total;
+    }
+
+    @Override
+    public long getCount() {
+        return counter;
     }
 }

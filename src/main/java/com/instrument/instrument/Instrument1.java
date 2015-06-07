@@ -32,4 +32,14 @@ public class Instrument1 extends AbstractInstrument {
         }
         return total / counter;
     }
+
+    @Override
+    public double getTotal() {
+        return total;
+    }
+
+    @Override
+    public long getCount() {
+        return counter;
+    }
 }

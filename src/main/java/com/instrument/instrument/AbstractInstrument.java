@@ -57,6 +57,10 @@ public abstract class AbstractInstrument {
 
     public abstract double calculateMean();
 
+    public abstract double getTotal();
+
+    public abstract long getCount();
+
     @Override
     public String toString() {
         return "Instrument {" +
