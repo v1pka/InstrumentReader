@@ -17,8 +17,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Unit test for simple App.
  */
-public class AnalysisTest
-{
+public class AnalysisTest {
 
     @Rule
     public TestName testName = new TestName();
@@ -27,7 +26,7 @@ public class AnalysisTest
 
     @Before
     public void setUp() throws IOException {
-        if(testName.getMethodName().equals("testHugeFileOutOfMemory")){
+        if (testName.getMethodName().equals("testHugeFileOutOfMemory")) {
             System.out.println("Starting to generate file.");
             File tempHugeFile = File.createTempFile("hugeInput", "txt");
             System.out.println("Path: " + tempHugeFile.getAbsolutePath());
@@ -51,7 +50,7 @@ public class AnalysisTest
 
         assertTrue(instruments.size() == 4);
         double testValue = 1;
-        for(AbstractInstrument instrument : instruments.values()){
+        for (AbstractInstrument instrument : instruments.values()) {
             assertTrue(instrument.calculateMean() == testValue);
         }
     }
@@ -68,7 +67,7 @@ public class AnalysisTest
 
         assertTrue(instruments.size() == 4);
         double testValue = 0;
-        for(AbstractInstrument instrument : instruments.values()){
+        for (AbstractInstrument instrument : instruments.values()) {
             assertTrue(instrument.calculateMean() == testValue);
         }
     }
@@ -96,11 +95,11 @@ public class AnalysisTest
         System.out.println("Execution time of processing large file -  " + TimeUnit.MILLISECONDS.toSeconds(end - start));
     }
 
-    private  Map<String, AbstractInstrument> runAnalysis(List<String> lines) throws IOException {
+    private Map<String, AbstractInstrument> runAnalysis(List<String> lines) throws IOException {
         File file = null;
         try {
             file = File.createTempFile("test", "tst");
-            try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file.getAbsolutePath(), true)))) {
+            try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file.getAbsolutePath(), true)))) {
                 lines.forEach(s -> out.println(s));
             } catch (IOException e) {
                 System.err.println(e);
@@ -111,7 +110,7 @@ public class AnalysisTest
         }
     }
 
-    private  Map<String, AbstractInstrument> runAnalysis(File file){
+    private Map<String, AbstractInstrument> runAnalysis(File file) {
         InstrumentAnalysis instrumentAnalysis = new InstrumentAnalysis(file.getAbsolutePath());
         Map<String, AbstractInstrument> instruments = instrumentAnalysis.process();
         return instruments;

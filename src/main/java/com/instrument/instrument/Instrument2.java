@@ -17,7 +17,7 @@ public class Instrument2 extends AbstractInstrument {
 
     @Override
     protected boolean validDate(LocalDate date) {
-        if(date.getMonth().equals(Month.NOVEMBER)){
+        if (date.getMonth().equals(Month.NOVEMBER)) {
             return true;
         }
         return false;

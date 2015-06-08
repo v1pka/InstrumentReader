@@ -10,7 +10,8 @@ import java.util.Map;
  */
 public class InstrumentFactory {
 
-    private InstrumentFactory(){}
+    private InstrumentFactory() {
+    }
 
     public static InstrumentFactory createInstance() {
         return new InstrumentFactory();
@@ -22,8 +23,8 @@ public class InstrumentFactory {
 
     private Map<String, AbstractInstrument> instruments = new HashMap<>();
 
-    public AbstractInstrument getInstrument(String name){
-        if(instruments.containsKey(name)){
+    public AbstractInstrument getInstrument(String name) {
+        if (instruments.containsKey(name)) {
             return instruments.get(name);
         } else {
             AbstractInstrument abstractInstrument = createByName(name);
@@ -33,11 +34,11 @@ public class InstrumentFactory {
 
     private AbstractInstrument createByName(String name) {
         AbstractInstrument abstractInstrument;
-        if(name.equalsIgnoreCase(Constants.INSTRUMENT1)){
+        if (name.equalsIgnoreCase(Constants.INSTRUMENT1)) {
             abstractInstrument = new Instrument1(name);
-        } else if(name.equalsIgnoreCase(Constants.INSTRUMENT2)){
+        } else if (name.equalsIgnoreCase(Constants.INSTRUMENT2)) {
             abstractInstrument = new Instrument2(name);
-        } else if(name.equalsIgnoreCase(Constants.INSTRUMENT3)){
+        } else if (name.equalsIgnoreCase(Constants.INSTRUMENT3)) {
             abstractInstrument = new Instrument3(name);
         } else {
             abstractInstrument = new OtherInstrument(name);

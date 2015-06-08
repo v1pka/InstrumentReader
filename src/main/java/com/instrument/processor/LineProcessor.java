@@ -29,11 +29,11 @@ public class LineProcessor implements Runnable {
         String line = "";
         try {
             while ((line = linesToProcess.take()) != null) {
-                if(line.equals(Constants.POISON_PILL)){
+                if (line.equals(Constants.POISON_PILL)) {
                     return;
                 }
                 String[] tokens = line.split(",");
-                if(tokens.length == 3){
+                if (tokens.length == 3) {
                     String name = tokens[0];
                     LocalDate date = LocalDate.parse(tokens[1], formatter);
                     Double value = Double.parseDouble(tokens[2]);

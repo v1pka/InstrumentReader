@@ -17,7 +17,7 @@ public class Instrument3 extends AbstractInstrument {
 
     @Override
     protected boolean validDate(LocalDate date) {
-        if(date.getYear() == 2014){
+        if (date.getYear() == 2014) {
             return true;
         }
         return false;

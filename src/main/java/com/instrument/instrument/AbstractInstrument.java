@@ -37,14 +37,14 @@ public abstract class AbstractInstrument {
 
 
     public void filterAndAddData(LocalDate date, double value) {
-        if(!isWorkingDay(date) || !validDate(date)){
+        if (!isWorkingDay(date) || !validDate(date)) {
             return;
         }
         addData(date, value);
     }
 
     private boolean isWorkingDay(LocalDate date) {
-        if(date.getDayOfWeek().equals(DayOfWeek.SATURDAY) || date.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+        if (date.getDayOfWeek().equals(DayOfWeek.SATURDAY) || date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
             return false;
         }
         return true;

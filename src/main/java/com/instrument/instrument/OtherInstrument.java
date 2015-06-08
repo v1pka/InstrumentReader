@@ -23,14 +23,14 @@ public class OtherInstrument extends AbstractInstrument {
 
     @Override
     protected void addData(LocalDate date, double value) {
-        if(tenLastDates.size() < 10){
+        if (tenLastDates.size() < 10) {
             tenLastDates.put(date, value);
             return;
         } else {
             Iterator<Map.Entry<LocalDate, Double>> iter = tenLastDates.entrySet().iterator();
             while (iter.hasNext()) {
                 Map.Entry<LocalDate, Double> entry = iter.next();
-                if(entry.getKey().isBefore(date)){
+                if (entry.getKey().isBefore(date)) {
                     iter.remove();
                     tenLastDates.put(date, value);
                     return;
